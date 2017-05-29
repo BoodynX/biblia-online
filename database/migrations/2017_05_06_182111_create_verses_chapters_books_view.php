@@ -21,7 +21,7 @@ class CreateVersesChaptersBooksView extends Migration
                 c.chapter_no, 
                 c.title AS chapter_title, 
                 v.verse_no AS verse, 
-                v.body
+                v.content
             FROM verses v
             LEFT JOIN chapters c ON c.id = v.chapter_id
             LEFT JOIN books b ON b.id = c.book_id
