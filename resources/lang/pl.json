@@ -1,0 +1,8 @@
+{
+  "Welcome!" : "Witaj!",
+  "You are receiving this email because we received a password reset request for your account.":
+    "Otrzymałeś to powiadomienie ponieważ dostaliśmy zamówienie na reset hasła dla Twojego konta.",
+  "If you did not request a password reset, no further action is required.":
+    "Jeśli nie zamawiałeś resetu hasła możesz zignorować tą wiadomość.",
+  "Regards," : "Z pozdrowieniami,"
+}
