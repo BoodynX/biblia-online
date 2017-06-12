@@ -16,21 +16,22 @@ Route::pattern('chapter', '[0-9]+');
 Route::pattern('verse', '[0-9]+');
 
 Route::get('/', function () {return view('welcome');});
-Route::get('/book/{book}/chapter/{chapter}/verse/{verse}', 'VersesController@show');
-Route::get('/book/{book}/chapter/{chapter}', 'ChaptersController@show');
 
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@show');
+    Route::get('/start', 'HomeController@index')->name('start');
+    Route::get('/test', 'TestController@index');
+    /* JSON */
+    Route::get('/ksiega/{book}/rozdzial/{chapter}/wers/{verse}', 'VersesController@show');
+    Route::get('/ksiega/{book}/rozdzials', 'ChaptersController@index');
 
-// @TODO The following controllers / methods need to be created
+    /* @TODO The following controllers / methods need to be created
+    Route::get('/ksiega/{book}', 'BooksController@show');
+    Route::get('/ksiega', 'BooksController@index');
+    Probably unnecessary for now
+    Route::get('/ksiega/{book}/rozdzial/{chapter}/wersy', 'VersesController@index');
+    Route::get('/ksiega/{book}/rozdzial/{chapter}/wersy/{from}/do/{to}', 'VersesController@set');
+     */
+});
 
-Route::get('/book/{book}/chapters', 'ChaptersController@index');
-//Route::get('/book/{book}', 'BooksController@show');
-//Route::get('/books', 'BooksController@index');
-
-// Probably unnecessary for now
-// Route::get('/book/{book}/chapter/{chapter}/verses', 'VersesController@index');
-// Route::get('/book/{book}/chapter/{chapter}/verses/{from}/to/{to}', 'VersesController@set');
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/test', 'TestController@index');
