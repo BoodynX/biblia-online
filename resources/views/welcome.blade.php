@@ -69,7 +69,7 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @if (Auth::check())
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/start') }}">Start</a>
                     @else
                         <a href="{{ url('/login') }}">@lang('auth.login')</a>
                         <a href="{{ url('/register') }}">@lang('auth.regi')</a>
