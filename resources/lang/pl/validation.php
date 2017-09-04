@@ -117,7 +117,7 @@ return [
     */
 
     'attributes'           => [
-        //
+        'password' => 'Hasło'
     ],
 
 ];
