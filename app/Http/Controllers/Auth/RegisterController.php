@@ -6,6 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\CC\ReaderProgress;
 
 class RegisterController extends Controller
 {
@@ -30,10 +31,10 @@ class RegisterController extends Controller
     protected $redirectTo = '/home';
 
     /**
-     * Create a new controller instance.
-     *
-     * @return void
+     * Numbers of days unlocked upon registration
      */
+    protected const NO_OF_DAYS_UNL_ON_REG = 1;
+
     public function __construct()
     {
         $this->middleware('guest');
@@ -62,10 +63,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        /**
+         * New user needs a reading plan for his first day. Here we create a first day record and we are making
+         * his personal copy of the first day plan from the plan_steps table.
+         */
+        ReaderProgress::update($user->id, self::NO_OF_DAYS_UNL_ON_REG);
+
+        return $user;
     }
 }
