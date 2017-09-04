@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/start', 'StartController@index')->name('start');
     Route::get('/test', 'TestController@index');
     /* JSONs */
-    Route::get('/ksiega/{book}/rozdzials', 'ChaptersController@index');
+    Route::get('/ksiega/{book}/rozdzialy', 'ChaptersController@index');
     /* Redirects */
     Route::get('/home', function () { return redirect()->route('start'); } )->name('home');
 
