@@ -16,5 +16,6 @@ class UserPlanDay extends Model
     ];
 
     /* Eloquent relation definitions */
-    public function planDay()     { return $this->belongsTo(PlanDay::Class); }
+    public function planDay()       { return $this->belongsTo(PlanDay::Class); }
+    public function userPlanSteps() { return $this->hasMany(UserPlanStep::Class); }
 }

@@ -2,19 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\UserPlanDay;
+use Auth;
 
 class StartController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-    }
-
     /**
      * Show the application dashboard.
      *
@@ -22,6 +14,18 @@ class StartController extends Controller
      */
     public function index()
     {
-        return view('start');
+        $user = Auth::user();
+        $user_plan_days = UserPlanDay::where('user_id', $user->id)
+            ->with('planDay.planSteps.chapter')->get();
+
+        foreach ($user_plan_days as $user_plan_day) {
+            $plan_steps = $user_plan_day->planDay->planSteps;
+            foreach ($plan_steps as $plan_step) {
+                $chapter = $plan_step->chapter;
+                $chapters[$chapter->book_id][$chapter->id] = $chapter;
+            }
+        }
+
+        return view('start', compact('chapters'));
     }
 }

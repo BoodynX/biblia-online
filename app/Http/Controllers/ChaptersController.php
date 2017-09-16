@@ -10,9 +10,8 @@ class ChaptersController extends Controller
 {
     public function show(int $book, int $chapter_no)
     {
-        $chapter = new Chapter();
-        $chapter->byBookChapter($book, $chapter_no);
-        return view('chapter', compact('chapter'));
+        $c = Chapter::byBookChapter($book, $chapter_no);
+        return view('chapter', compact('c'));
     }
 
     public function index(Book $book)

@@ -5,6 +5,7 @@ namespace App;
 use App\Notifications\PasswordReset;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\UserPlanDay;
 
 class User extends Authenticatable
 {
@@ -27,6 +28,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function userPlanDays() { return $this->hasMany(UserPlanDay::Class); }
 
     public function sendPasswordResetNotification($token)
     {
