@@ -20,22 +20,24 @@ class ReaderProgress
     {
         $user = Auth::user();
         $last_login = $user->last_login;
+        $user_id = $user->id;
         $last_login_carbon = Carbon::parse($last_login);
         $this_login_carbon = Carbon::now();
+        /* Check how long (in days) the user was gone */
         $days_since_last_login = $last_login_carbon->diffInDays($this_login_carbon);
-        $user_id = $user->id;
-        /* Check credits and unlock appropriate number of "days to read"  */
-        if($days_since_last_login > 0) {
-            /* Max days that can be unlocked is defined by MAX_DAYS const */
-            $days_since_last_login = $days_since_last_login > self::MAX_DAYS ? self::MAX_DAYS : $days_since_last_login;
-
-            /* Check how many "unread days" the user has, before unlocking anymore chapters */
-            $user_plan_days = UserPlanDay::where([['user_id', $user_id],['status','new']])->with('userPlanSteps')->get();
-            $days_not_compleat = self::checkDaysStatus($user_plan_days);
-            $days_to_unlock = $days_since_last_login - $days_not_compleat;
-            if ($days_to_unlock > 0) {
-                self::update($user_id, $days_to_unlock);
+        /* Check how many "unread days" the user has, before unlocking anymore chapters */
+        $user_plan_days = UserPlanDay::where([['user_id', $user_id],['status','new']])->with('userPlanSteps')->get();
+        $days_not_compleat = self::checkDaysStatus($user_plan_days);
+        /* Check if user did not log in today and unlock appropriate number of "days to read" if he didn't reach MAX_DAYS */
+        if ($days_since_last_login > 0 && $days_not_compleat < self::MAX_DAYS) {
+            /* Check how many days can be unlocked without crossing the limit */
+            if (($days_since_last_login + $days_not_compleat) <= self::MAX_DAYS) {
+                $days_to_unlock = $days_since_last_login;
+            } else {
+                $days_to_unlock = self::MAX_DAYS - $days_not_compleat;
             }
+            /* Unlock established number of days*/
+            self::update($user_id, $days_to_unlock);
         }
         /*update users last login to current date*/
         $this_login = $this_login_carbon->toDateString();
