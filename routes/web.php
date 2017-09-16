@@ -19,6 +19,7 @@ Route::get('/', function () {return view('welcome');});
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@show');
+    Route::post('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@showNext');
     Route::get('/start', 'StartController@index')->name('start');
     Route::get('/test', 'TestController@index');
     /* JSONs */
