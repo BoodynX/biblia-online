@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserPlanStep;
 use Illuminate\Http\Request;
 use App\Models\Chapter;
 use App\Models\Book;
@@ -17,10 +18,45 @@ class ChaptersController extends Controller
         return view('chapter', compact('c', 'next_c'));
     }
 
-    public function showNext(int $book, int $chapter_no)
+    public function showNext(int $book, int $chapter_no, Request $r)
     {
-        /* @TODO mark the last chapter as read ('done') */
+        $user_id = Auth::id();
+        $prev_chapter_id =  intval($r->input('cid'));
 
+        /* Get the users current step to mark it as read */
+
+        /* Query builder returns null :( */
+//        $user_plan_step_id = DB::table('chapters')
+//            ->leftJoin('plan_steps','chapters.id','=','plan_steps.chapter_id')
+//            ->leftJoin('plan_days','plan_steps.plan_day_id','=','plan_days.id')
+//            ->leftJoin('user_plan_days','plan_days.id','=','user_plan_days.plan_day_id')
+//            ->leftJoin('user_plan_steps','user_plan_days.id','=','user_plan_steps.user_plan_day_id')
+//            ->select('user_plan_steps.id')
+//            ->where([
+//                ['chapters.id', $prev_chapter_id],
+//                ['user_plan_days.user_id', $user_id],
+//                ['plan_steps.id', 'user_plan_steps.plan_step_id']
+//            ])->first();
+
+        /* Falling back to raw SQL */
+        $user_plan_step_id = DB::select('
+            SELECT user_plan_steps.id
+            FROM chapters
+            LEFT JOIN plan_steps ON chapters.id = plan_steps.chapter_id
+            LEFT JOIN plan_days ON plan_steps.plan_day_id = plan_days.id
+            LEFT JOIN user_plan_days ON plan_days.id = user_plan_days.plan_day_id
+            LEFT JOIN user_plan_steps ON user_plan_days.id = user_plan_steps.user_plan_day_id
+            WHERE chapters.id = :chapter_id
+            AND user_plan_days.user_id = :user_id
+            AND plan_steps.id = user_plan_steps.plan_step_id',
+            ['chapter_id' => $prev_chapter_id, 'user_id' => $user_id]
+        );
+        $user_plan_step_id = $user_plan_step_id[0]->id;
+
+        /* Mark the step / chapter as read by this user */
+        UserPlanStep::find($user_plan_step_id)->update(['status' => 'done']);
+
+        /* Go to next chapter */
         return $this->show($book, $chapter_no);
     }
 
@@ -29,7 +65,7 @@ class ChaptersController extends Controller
         return $book->chapters;
     }
 
-    private function nextChapter (int $chapter_id)
+    private function nextChapter (int $chapter_id) : \stdClass
     {
         $user_id = Auth::id();
         $conditions = [
