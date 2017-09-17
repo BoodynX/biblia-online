@@ -23,22 +23,7 @@ class ChaptersController extends Controller
         $user_id = Auth::id();
         $prev_chapter_id =  intval($r->input('cid'));
 
-        /* Get the users current step to mark it as read */
-
-        /* Query builder returns null :( */
-//        $user_plan_step_id = DB::table('chapters')
-//            ->leftJoin('plan_steps','chapters.id','=','plan_steps.chapter_id')
-//            ->leftJoin('plan_days','plan_steps.plan_day_id','=','plan_days.id')
-//            ->leftJoin('user_plan_days','plan_days.id','=','user_plan_days.plan_day_id')
-//            ->leftJoin('user_plan_steps','user_plan_days.id','=','user_plan_steps.user_plan_day_id')
-//            ->select('user_plan_steps.id')
-//            ->where([
-//                ['chapters.id', $prev_chapter_id],
-//                ['user_plan_days.user_id', $user_id],
-//                ['plan_steps.id', 'user_plan_steps.plan_step_id']
-//            ])->first();
-
-        /* Falling back to raw SQL */
+        /* Get the users current step id to mark it as read */
         $user_plan_step_id = DB::select('
             SELECT user_plan_steps.id
             FROM chapters
