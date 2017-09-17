@@ -16,12 +16,13 @@ class StartController extends Controller
     {
         $user = Auth::user();
         $user_plan_days = UserPlanDay::where('user_id', $user->id)
-            ->with('planDay.planSteps.chapter')->get();
+            ->with('userPlanSteps.planStep.chapter')->get();
 
         foreach ($user_plan_days as $user_plan_day) {
-            $plan_steps = $user_plan_day->planDay->planSteps;
-            foreach ($plan_steps as $plan_step) {
-                $chapter = $plan_step->chapter;
+            $userPlanSteps = $user_plan_day->userPlanSteps;
+            foreach ($userPlanSteps as $user_plan_step) {
+                $chapter = $user_plan_step->planStep->chapter;
+                $chapter->setStatus($user_plan_step->status);
                 $chapters[$chapter->book_id][$chapter->id] = $chapter;
             }
         }

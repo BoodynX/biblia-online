@@ -6,8 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Chapter extends Model
 {
+    protected $status;
+
     /* GETTERS */
-    public function getContent() : array { return $this->verses->pluck('content')->all(); }
+    public function getContent() : array  { return $this->verses->pluck('content')->all(); }
+    public function getStatus()  : string { return $this->status; }
+
+    /* SETTERS */
+    public function setStatus($status) { $this->status = $status; }
 
     /* Eloquent relation definitions */
     public function book()   { return $this->belongsTo(Book::class); }
