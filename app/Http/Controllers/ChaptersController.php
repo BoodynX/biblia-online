@@ -10,18 +10,18 @@ use Illuminate\Support\Facades\DB;
 
 class ChaptersController extends Controller
 {
-    public function show(int $book, int $chapter_no, int $chapter_id = null)
+    public function show(int $book, int $chapter_no)
     {
         $c = Chapter::byBookChapter($book, $chapter_no);
         $next_c = $this->nextChapter($c->id);
         return view('chapter', compact('c', 'next_c'));
     }
 
-    public function showNext(int $book, int $chapter_no, Request $r)
+    public function showNext(int $book, int $chapter_no)
     {
         /* @TODO mark the last chapter as read ('done') */
 
-        return $this->show($book, $chapter_no, $r->input('cid'));
+        return $this->show($book, $chapter_no);
     }
 
     public function index(Book $book)
@@ -36,6 +36,9 @@ class ChaptersController extends Controller
             ['user_plan_days.user_id', $user_id],
             ['user_plan_steps.status', 'new']
         ];
+        if ($chapter_id) {
+            $conditions[] = ['chapters.id', '>', $chapter_id];
+        }
         $next_c = DB::table('user_plan_days')
             ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
             ->leftJoin('plan_steps', 'user_plan_steps.plan_step_id', '=', 'plan_steps.id')
