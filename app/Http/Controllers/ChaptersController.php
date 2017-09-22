@@ -5,20 +5,88 @@ namespace App\Http\Controllers;
 use App\Models\UserPlanStep;
 use Illuminate\Http\Request;
 use App\Models\Chapter;
-use App\Models\Book;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class ChaptersController extends Controller
 {
+    protected const LAST_BOOK = 3;
+
     public function show(int $book, int $chapter_no)
     {
         $c = Chapter::byBookChapter($book, $chapter_no);
-        $next_c = $this->nextChapter($c->id);
-        return view('chapter', compact('c', 'next_c'));
+        $next_step = $this->nextStep($c->id);
+        $next_book = $this->nextStepInNextBook($c->book_id);
+        return view('chapter', compact('c', 'next_step', 'next_book'));
     }
 
     public function showNext(int $book, int $chapter_no, Request $r)
+    {
+        /* Mark current user step as read */
+        $this->currentUserStepRead($r);
+
+        /* Go to next chapter */
+        return $this->show($book, $chapter_no);
+    }
+
+    public function showEnd(Request $r)
+    {
+        /* Mark current user step as read */
+        $this->currentUserStepRead($r);
+
+        /* Go to end screen */
+        return view('the-end');
+    }
+
+    /**
+     * @param int       $chapter_id
+     * @param int|bool  $book
+     * @return stdClass
+     */
+
+    private function nextStep($chapter_id, $book = false) : stdClass
+    {
+        $user_id = Auth::id();
+        $conditions = [
+            ['user_plan_days.user_id', $user_id],
+            ['user_plan_steps.status', 'new']
+        ];
+        if ($chapter_id) {
+            $conditions[] = ['chapters.id', '>', $chapter_id];
+        }
+        if ($book !== false) {
+            $conditions[] = ['chapters.book_id', $book];
+        }
+        $next_step = DB::table('user_plan_days')
+            ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
+            ->leftJoin('plan_steps', 'user_plan_steps.plan_step_id', '=', 'plan_steps.id')
+            ->leftJoin('chapters', 'plan_steps.chapter_id', '=', 'chapters.id')
+            ->select('chapters.id', 'chapters.chapter_no', 'chapters.book_id','user_plan_steps.status')
+            ->where($conditions)
+            ->orderBy('chapters.id', 'asc')->take(1)->first();
+        if ($next_step === null) {
+            $next_step = new stdClass();
+            $next_step->the_end = true;
+        } else {
+            $next_step->the_end = false;
+        }
+        return $next_step;
+    }
+
+    private function nextStepInNextBook($book) : stdClass
+    {
+        if ($book < self::LAST_BOOK) {
+            $next_book = $book + 1;
+            $next_book = $this->nextStep(false, $next_book);
+        } else {
+            $next_book = new stdClass;
+            $next_book->the_end = true;
+        }
+        return $next_book;
+    }
+
+    private function currentUserStepRead(Request $r)
     {
         $user_id = Auth::id();
         $prev_chapter_id =  intval($r->input('cid'));
@@ -40,33 +108,5 @@ class ChaptersController extends Controller
 
         /* Mark the step / chapter as read by this user */
         UserPlanStep::find($user_plan_step_id)->update(['status' => 'done']);
-
-        /* Go to next chapter */
-        return $this->show($book, $chapter_no);
-    }
-
-    public function index(Book $book)
-    {
-        return $book->chapters;
-    }
-
-    private function nextChapter (int $chapter_id) : \stdClass
-    {
-        $user_id = Auth::id();
-        $conditions = [
-            ['user_plan_days.user_id', $user_id],
-            ['user_plan_steps.status', 'new']
-        ];
-        if ($chapter_id) {
-            $conditions[] = ['chapters.id', '>', $chapter_id];
-        }
-        $next_c = DB::table('user_plan_days')
-            ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
-            ->leftJoin('plan_steps', 'user_plan_steps.plan_step_id', '=', 'plan_steps.id')
-            ->leftJoin('chapters', 'plan_steps.chapter_id', '=', 'chapters.id')
-            ->select('chapters.id', 'chapters.chapter_no', 'chapters.book_id','user_plan_steps.status')
-            ->where($conditions)
-            ->orderBy('chapters.id', 'asc')->take(1)->first();
-        return $next_c;
     }
 }

@@ -20,22 +20,14 @@ Route::get('/', function () {return view('welcome');});
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@show');
     Route::post('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@showNext');
+    Route::post('/koniec', 'ChaptersController@showEnd');
     Route::get('/start', 'StartController@index')->name('start');
-    Route::get('/test', 'TestController@index');
-    /* JSONs */
-    Route::get('/ksiega/{book}/rozdzialy', 'ChaptersController@index');
+
     /* Redirects */
     Route::get('/home', function () { return redirect()->route('start'); } )->name('home');
 
-    /*
-     * @TODO The following controllers / methods need to be created
-     * Route::get('/ksiega/{book}/rozdzial/{chapter}/wers/{verse}', 'VersesController@show'); // @TODO Created but unfinished
-     * Route::get('/ksiega/{book}', 'BooksController@show');
-     * Route::get('/ksiega', 'BooksController@index');
-     * Probably unnecessary for now
-     * Route::get('/ksiega/{book}/rozdzial/{chapter}/wersy', 'VersesController@index');
-     * Route::get('/ksiega/{book}/rozdzial/{chapter}/wersy/{from}/do/{to}', 'VersesController@set');
-     */
+    /* DEV ONLY */
+    Route::get('/test', 'TestController@index');
 });
 
 Auth::routes();
