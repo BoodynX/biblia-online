@@ -14,7 +14,7 @@ use App\User;
 class ReaderProgress
 {
     /* Max number of days that can be unlocked at once */
-    protected const MAX_DAYS = 7;
+    const MAX_DAYS = 7;
 
     public static function checkAndUpdate()
     {

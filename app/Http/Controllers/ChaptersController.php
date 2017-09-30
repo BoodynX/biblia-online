@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Gate;
 
 class ChaptersController extends Controller
 {
-    protected const LAST_BOOK = 73;
+    const LAST_BOOK = 73;
 
     public function show(int $book, int $chapter_no)
     {
