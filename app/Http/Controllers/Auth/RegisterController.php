@@ -28,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/start';
+    protected $redirectTo = '/nastepny_krok';
 
     /**
      * Numbers of days unlocked upon registration

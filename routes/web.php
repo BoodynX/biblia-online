@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@show');
     Route::post('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@showNext');
     Route::post('/koniec', 'ChaptersController@showEnd');
+    Route::get('/nastepny_krok', 'ChaptersController@findNextStep');
     Route::get('/start', 'StartController@index')->name('start');
 
     /* Redirects */
