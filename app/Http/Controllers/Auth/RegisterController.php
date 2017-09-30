@@ -33,7 +33,7 @@ class RegisterController extends Controller
     /**
      * Numbers of days unlocked upon registration
      */
-    protected const NO_OF_DAYS_UNL_ON_REG = 1;
+    const NO_OF_DAYS_UNL_ON_REG = 1;
 
     public function __construct()
     {
