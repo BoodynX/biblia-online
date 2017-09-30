@@ -48,6 +48,10 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        if (!isset($data['password_alpha']) or $data['password_alpha'] !== 'czytamuszami') {
+            dd('Strona w trakcie konstrukcji dostępna jest tylko dla testerów!');
+        }
+
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

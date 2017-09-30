@@ -61,6 +61,14 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="password-alpha" class="col-md-4 control-label">Alpha Pass</label>
+
+                            <div class="col-md-6">
+                                <input id="password-alpha" type="password" class="form-control" name="password_alpha" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
                                     @lang('auth.regi_me')
