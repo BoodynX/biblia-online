@@ -8,14 +8,21 @@ use App\Models\Chapter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use stdClass;
+use Illuminate\Support\Facades\Gate;
 
 class ChaptersController extends Controller
 {
-    protected const LAST_BOOK = 3;
+    protected const LAST_BOOK = 73;
 
     public function show(int $book, int $chapter_no)
     {
         $c = Chapter::byBookChapter($book, $chapter_no);
+
+        /* @TODO access control logic */
+        if (Gate::allows('show-chapter')) {
+            // The current user can see this chapter...
+        }
+
         $next_step = $this->nextStep($c->id);
         $next_book = $this->nextStepInNextBook($c->book_id);
         return view('chapter', compact('c', 'next_step', 'next_book'));
@@ -25,7 +32,6 @@ class ChaptersController extends Controller
     {
         /* Mark current user step as read */
         $this->currentUserStepRead($r);
-
         /* Go to next chapter */
         return $this->show($book, $chapter_no);
     }
@@ -34,14 +40,21 @@ class ChaptersController extends Controller
     {
         /* Mark current user step as read */
         $this->currentUserStepRead($r);
-
         /* Go to end screen */
         return view('the-end');
     }
 
+    public function findNextStep()
+    {
+        /* Find next step */
+        $c = $this->nextStep(false);
+        /* Redirect to next step */
+        return redirect('ksiega/'.$c->book_id.'/rozdzial/'.$c->chapter_no);
+    }
+
     /**
-     * @param int       $chapter_id
-     * @param int|bool  $book
+     * @param int       $chapter_id     Next after this chapter id
+     * @param int|bool  $book           Next after this book id/no
      * @return stdClass
      */
 
@@ -56,7 +69,7 @@ class ChaptersController extends Controller
             $conditions[] = ['chapters.id', '>', $chapter_id];
         }
         if ($book !== false) {
-            $conditions[] = ['chapters.book_id', $book];
+            $conditions[] = ['chapters.book_id', '>', $book];
         }
         $next_step = DB::table('user_plan_days')
             ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
@@ -77,8 +90,8 @@ class ChaptersController extends Controller
     private function nextStepInNextBook($book) : stdClass
     {
         if ($book < self::LAST_BOOK) {
-            $next_book = $book + 1;
-            $next_book = $this->nextStep(false, $next_book);
+            /* If there are no more books unlocked the nextStep will return stdObject->the_end = true */
+            $next_book = $this->nextStep(false, $book);
         } else {
             $next_book = new stdClass;
             $next_book->the_end = true;
@@ -89,7 +102,7 @@ class ChaptersController extends Controller
     private function currentUserStepRead(Request $r)
     {
         $user_id = Auth::id();
-        $prev_chapter_id =  intval($r->input('cid'));
+        $prev_chapter_id = intval($r->input('cid'));
 
         /* Get the users current step id to mark it as read */
         $user_plan_step_id = DB::select('
