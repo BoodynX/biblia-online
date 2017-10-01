@@ -77,7 +77,7 @@
                 </div>
             </div>
         </nav>
-
+        @include('cookieConsent::index')
         @yield('content')
     </div>
 

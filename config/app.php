@@ -167,6 +167,7 @@ return [
          * Package Service Providers...
          */
         Laravel\Tinker\TinkerServiceProvider::class,
+        Spatie\CookieConsent\CookieConsentServiceProvider::class,
 
         /*
          * Application Service Providers...

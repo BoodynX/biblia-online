@@ -13,10 +13,9 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
+                /*background-color: #fff;*/
                 color: #636b6f;
                 font-family: 'Raleway', sans-serif;
-                font-weight: 100;
                 height: 100vh;
                 margin: 0;
             }
@@ -47,6 +46,7 @@
 
             .title {
                 font-size: 84px;
+                font-weight: 100;
             }
 
             .links > a {
@@ -63,8 +63,12 @@
                 margin-bottom: 30px;
             }
         </style>
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
     </head>
     <body>
+    <div id="alert_pusher" style="margin-bottom: 22px"></div>
+        @include('cookieConsent::index')
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
