@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChaptersFaq;
 use App\Models\UserPlanStep;
 use Illuminate\Http\Request;
 use App\Models\Chapter;
@@ -25,7 +26,8 @@ class ChaptersController extends Controller
 
         $next_step = $this->nextStep($c->id);
         $next_book = $this->nextStepInNextBook($c->book_id);
-        return view('chapter', compact('c', 'next_step', 'next_book'));
+        $faq       = ChaptersFaq::where('chapter_id', $c->id)->get();
+        return view('chapter.main', compact('c', 'next_step', 'next_book', 'faq'));
     }
 
     public function showNext(int $book, int $chapter_no, Request $r)

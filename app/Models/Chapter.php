@@ -16,9 +16,10 @@ class Chapter extends Model
     public function setStatus($status) { $this->status = $status; }
 
     /* Eloquent relation definitions */
-    public function book()   { return $this->belongsTo(Book::class); }
-    public function verses() { return $this->hasMany(Verse::class); }
-    public function planStep(){ return $this->hasOne(PlanStep::class); }
+    public function book()         { return $this->belongsTo(Book::class); }
+    public function verses()       { return $this->hasMany(Verse::class); }
+    public function chaptersFaqs() { return $this->hasMany(ChapterFaq::class); }
+    public function planStep()     { return $this->hasOne(PlanStep::class); }
 
     /**
      * Gets chapter data by its number in a given book
