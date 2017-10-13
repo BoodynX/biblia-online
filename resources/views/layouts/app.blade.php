@@ -12,6 +12,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @yield('styles')
 
     <!-- Scripts -->
     <script>
@@ -19,6 +20,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
+    @yield('scripts-before')
 </head>
 <body>
     <div id="app">
@@ -83,5 +85,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    @yield('scripts-after')
 </body>
 </html>

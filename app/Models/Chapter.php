@@ -7,13 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Chapter extends Model
 {
     protected $status;
+    protected $is_next;
 
     /* GETTERS */
     public function getContent() : array  { return $this->verses->pluck('content')->all(); }
     public function getStatus()  : string { return $this->status; }
+    public function getIsNext()  : bool { return $this->is_next; }
 
     /* SETTERS */
     public function setStatus($status) { $this->status = $status; }
+    public function setIsNext($is_next) { $this->is_next = $is_next; }
+
 
     /* Eloquent relation definitions */
     public function book()         { return $this->belongsTo(Book::class); }
@@ -26,15 +30,15 @@ class Chapter extends Model
      *
      * @param int $book_no
      * @param int $chapter_no
-     * @return $chapter
+     * @return self $chapter
      */
-    public static function byBookChapter(int $book_no, int $chapter_no)
+    public static function byBookChapter(int $book_no, int $chapter_no) : self
     {
         $conditions = [
             ['book_id', $book_no],
             ['chapter_no', $chapter_no],
         ];
-        $chapter = self::where($conditions)->first();
+        $chapter = self::where($conditions)->with('chaptersFaqs')->first();
         return $chapter;
     }
 }
