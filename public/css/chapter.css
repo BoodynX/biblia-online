@@ -1,0 +1,17 @@
+/* CHAPTER STYLE */
+
+.b-chapter-bottom-buttons {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.ch_question {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.ch_answer {
+  margin-bottom: 35px;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInJlc291cmNlcy9hc3NldHMvc2Fzcy9jaGFwdGVyLnNjc3MiXSwic291cmNlc0NvbnRlbnQiOlsiLyogQ0hBUFRFUiBTVFlMRSAqL1xyXG5cclxuLmItY2hhcHRlci1ib3R0b20tYnV0dG9ucyB7XHJcbiAgbWFyZ2luLXRvcDogMmVtO1xyXG4gIG1hcmdpbi1ib3R0b206IDJlbTtcclxufVxyXG4uY2hfcXVlc3Rpb24ge1xyXG4gIGZvbnQtd2VpZ2h0OiBib2xkO1xyXG4gIG1hcmdpbi1ib3R0b206IDVweDtcclxufVxyXG4uY2hfYW5zd2VyIHtcclxuICBtYXJnaW4tYm90dG9tOiAzNXB4O1xyXG59Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLG1CQUFtQjtBQUVuQixBQUFBLHlCQUF5QixDQUFDO0VBQ3hCLFVBQVUsRUFBRSxHQUFHO0VBQ2YsYUFBYSxFQUFFLEdBQUc7Q0FDbkI7O0FBQ0QsQUFBQSxZQUFZLENBQUM7RUFDWCxXQUFXLEVBQUUsSUFBSTtFQUNqQixhQUFhLEVBQUUsR0FBRztDQUNuQjs7QUFDRCxBQUFBLFVBQVUsQ0FBQztFQUNULGFBQWEsRUFBRSxJQUFJO0NBQ3BCIn0= */
