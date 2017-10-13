@@ -10,8 +10,18 @@
                     <div class="panel-body">
                         @foreach($chapters[$book_no] as $c)
                             <p>
-                                <a href="ksiega/{{$c->book_id}}/rozdzial/{{$c->chapter_no}}">Rozdział {{$c->chapter_no}} - {{$c->title}}</a>
-                                @if ($c->getStatus() == 'new') <span class="label label-info">Nowy</span> @endif
+                                @if ($c->getStatus() == 'new')
+                                    @if ($c->getIsNext())
+                                        <a href="ksiega/{{$c->book_id}}/rozdzial/{{$c->chapter_no}}">
+                                            Rozdział {{$c->chapter_no}}
+                                        </a>
+                                        <span class="label label-info">Nowy</span>
+                                    @else
+                                        Rozdział {{$c->chapter_no}}
+                                    @endif
+                                @else
+                                    <a href="ksiega/{{$c->book_id}}/rozdzial/{{$c->chapter_no}}">Rozdział {{$c->chapter_no}}</a>
+                                @endif
                             </p>
                         @endforeach
                     </div>
