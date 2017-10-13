@@ -48,6 +48,7 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        /* @TODO Remove before final deployment */
         if (!isset($data['password_alpha']) or $data['password_alpha'] !== 'czytamuszami') {
             dd('Strona w trakcie konstrukcji dostępna jest tylko dla testerów!');
         }
