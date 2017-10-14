@@ -24,6 +24,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/nastepny_krok', 'ChaptersController@findNextStep');
     Route::get('/start', 'StartController@index')->name('start');
 
+    /* AJAX */
+    Route::post('/chapter/send_question', 'FaqController@store');
+
     /* Redirects */
     Route::get('/home', function () { return redirect()->route('start'); } )->name('home');
 

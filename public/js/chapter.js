@@ -79,39 +79,61 @@ module.exports = __webpack_require__(8);
 /***/ 8:
 /***/ (function(module, exports) {
 
-/**
- * SCROLL TO THIS ON CLICK
- * If clicked elements data-target attribute points to some elements id
- * starting with a # it will that element to the top of the page if possible
- * <p id="scrollToThisElem" class="scrollTo" data-target="#scrollToThisElem">
- */
+$(document).ready(function () {
+    /**
+     * SCROLL TO THIS ON CLICK
+     * If clicked elements data-target attribute points to some elements id
+     * starting with a # it will that element to the top of the page if possible
+     * <p id="scrollToThisElem" class="scrollTo" data-target="#scrollToThisElem">
+     */
+    $('.scrollTo').on('click', function () {
+        var elem = $(this);
+        elem = elem[0].dataset.target;
+        setTimeout(function () {
+            $('html, body').animate({
+                scrollTop: $(elem).offset().top
+            }, 1000);
+        }, 1);
+    });
 
-$(".scrollTo").on("click", function () {
-    var elem = $(this);
-    elem = elem[0].dataset.target;
-    setTimeout(function () {
-        $('html, body').animate({
-            scrollTop: $(elem).offset().top
-        }, 1000);
-    }, 1);
-});
+    /**
+     * SWITCH FORM ACTION ATTR ON CLICK
+     * Changes the forms action attr depending on which button was pushed
+     * button determined by value attr
+     */
+    $('.navButton').on('click', function () {
+        var elem = $(this);
+        if (elem[0].value == 'next_step') {
+            var book = elem[0].dataset.book;
+            var chapter = elem[0].dataset.chapter;
+        }
+        if (elem[0].value == 'next_book') {
+            var book = elem[0].dataset.book;
+            var chapter = elem[0].dataset.chapter;
+        }
+        document.chapter_nav_buttons.action = '/ksiega/' + book + '/rozdzial/' + chapter;
+    });
 
-/**
- * SWITCH FORM ACTION ATTR ON CLICK
- * Changes the forms action attr depending on which button was pushed
- * button determined by value attr
- */
-$(".navButton").on("click", function () {
-    var elem = $(this);
-    if (elem[0].value == 'next_step') {
-        var book = elem[0].dataset.book;
-        var chapter = elem[0].dataset.chapter;
-    }
-    if (elem[0].value == 'next_book') {
-        var book = elem[0].dataset.book;
-        var chapter = elem[0].dataset.chapter;
-    }
-    document.chapter_nav_buttons.action = '/ksiega/' + book + '/rozdzial/' + chapter;
+    /**
+     * SEND QUESTION AJAX
+     */
+    $('#faq_form').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: '/chapter/send_question',
+            data: $('#faq_form').serialize(),
+            success: function success(msg) {
+                $("#faq_form").collapse('hide');
+                $("#ajaxResponse").text(msg);
+                $("#ajaxResponse").collapse('show');
+            }
+        });
+    });
+
+    $('#faq_form_question').on('click', function () {
+        $("#ajaxResponse").collapse('hide');
+    });
 });
 
 /***/ })

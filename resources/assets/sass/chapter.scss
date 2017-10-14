@@ -1,13 +1,27 @@
 /* CHAPTER STYLE */
 
 .b-chapter-bottom-buttons {
-  margin-top: 2em;
-  margin-bottom: 2em;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 .ch_question {
+  margin-top: 20px;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
+  cursor:pointer;
 }
 .ch_answer {
-  margin-bottom: 35px;
+  margin: 0;
+}
+
+#faq_form_question {
+  color: #3869D4;
+}
+
+#user_question_field {
+  margin-bottom: 10px;
+}
+
+#user_question {
+  margin-bottom: 15px;
 }
