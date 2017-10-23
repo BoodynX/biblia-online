@@ -2,7 +2,7 @@
     {{ csrf_field() }}
     <input type="hidden" name="cid" value="{{$chapter->id}}">
     <div class="btn-group" role="group" aria-label="...">
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#chapter_modal">
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#chapter_media_modal">
             Media
         </button>
         <button type="button" class="btn btn-default scrollTo" data-toggle="collapse" data-target="#faq"
