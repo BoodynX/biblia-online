@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Chapter extends Model
 {
@@ -10,7 +11,6 @@ class Chapter extends Model
     protected $is_next;
 
     /* GETTERS */
-    public function getContent() : array  { return $this->verses->pluck('content')->all(); }
     public function getStatus()  : string { return $this->status; }
     public function getIsNext()  : bool { return $this->is_next; }
 
@@ -39,7 +39,11 @@ class Chapter extends Model
             ['book_id', $book_no],
             ['chapter_no', $chapter_no],
         ];
-        $chapter = self::where($conditions)->with('chapterFaqs')->first();
+        $with = [
+            'chapterFaqs',
+            'verses.verseUserFavs' => function ($query) { $query->where('user_id', Auth::id()); }
+        ];
+        $chapter = self::where($conditions)->with($with)->first();
         return $chapter;
     }
 }

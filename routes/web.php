@@ -25,7 +25,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/start', 'StartController@index')->name('start');
 
     /* AJAX */
-    Route::post('/chapter/send_question', 'FaqController@store');
+    Route::post('/chapter/send_question', 'ChaptersController@storeQuestion');
+    Route::post('/verse/store_fav', 'VersesController@storeFav');
 
     /* Redirects */
     Route::get('/home', function () { return redirect()->route('start'); } )->name('home');

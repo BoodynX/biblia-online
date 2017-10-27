@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ChapterFaq;
 use App\Models\UserPlanStep;
 use Illuminate\Http\Request;
 use App\Models\Chapter;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\ChapterUserQuestion;
 use stdClass;
 
 class ChaptersController extends Controller
@@ -46,7 +46,7 @@ class ChaptersController extends Controller
     /**
      * This method redirects users to the first unread reading step in the plan. It is used in routing
      * @see routes/web.php - Route::get('/nastepny_krok', 'ChaptersController(at)findNextStep');
-     * */
+     */
     public function findNextStep()
     {
         /* Find next step */
@@ -55,12 +55,25 @@ class ChaptersController extends Controller
         return redirect('ksiega/'.$chapter->book_id.'/rozdzial/'.$chapter->chapter_no);
     }
 
+    public function storeQuestion(Request $request, ChapterUserQuestion $question)
+    {
+        $question->user_id    = Auth::id();
+        $question->chapter_id = $request->cid;
+        $question->question   = $request->user_question;
+        $query_status = $question->save();
+        if ($query_status === true) {
+            $response = 'Dziękujemy za wysłane pytanie. Odpowiemy możliwie jak najszybciej.';
+        } else {
+            $response = 'Wystąpiły problemy techniczne. Prosimy spróbować później.';
+        }
+        return $response;
+    }
+
     /**
      * @param int       $chapter_id     Next after this chapter id
      * @param int|bool  $book_no           Next after this book id/no
      * @return stdClass
      */
-
     private function nextStep($chapter_id, $book_no = false) : stdClass
     {
         $user_id = Auth::id();

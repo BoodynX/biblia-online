@@ -1,9 +1,38 @@
 /* CHAPTER STYLE */
 
-.b-chapter-bottom-buttons {
-  margin-top: 30px;
-  margin-bottom: 30px;
+////////////////////////////////////////////////////////
+// Verse style
+////////////////////////////////////////////////////////
+#chapter_content {
+  line-height: 2;
 }
+.verse {
+  padding: 5px 1px;
+  border-radius: 3px;
+  transition: background-color 0.3s;
+  cursor:pointer;
+}
+.verse:hover {
+  background-color: #e1e4fa;
+  transition: background-color 0.3s;
+  transition-delay: 0.2s;
+}
+
+.verse_modal_header {
+  margin-top: 25px;
+  font-weight: bold;
+}
+.verse_modal_header:first-child {
+  margin-top: 5px;
+}
+.button_ico {
+  margin-left: 7px;
+  font-size: large;
+  top: 3px;
+}
+////////////////////////////////////////////////////////
+// Chapter content
+////////////////////////////////////////////////////////
 .ch_question {
   margin-top: 20px;
   font-weight: bold;
@@ -13,15 +42,21 @@
 .ch_answer {
   margin: 0;
 }
-
 #faq_form_question {
   color: #3869D4;
 }
-
 #user_question_field {
   margin-bottom: 10px;
 }
-
 #user_question {
   margin-bottom: 15px;
 }
+////////////////////////////////////////////////////////
+// Chapter navigation
+////////////////////////////////////////////////////////
+.b-chapter-bottom-buttons {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+

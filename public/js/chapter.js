@@ -80,6 +80,13 @@ module.exports = __webpack_require__(8);
 /***/ (function(module, exports) {
 
 $(document).ready(function () {
+    /** Automatically add the CSRF token to all request headers */
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     /**
      * SCROLL TO THIS ON CLICK
      * If clicked elements data-target attribute points to some elements id
@@ -115,7 +122,7 @@ $(document).ready(function () {
     });
 
     /**
-     * SEND QUESTION AJAX
+     * SEND QUESTION - AJAX
      */
     $('#faq_form').on('submit', function (e) {
         e.preventDefault();
@@ -131,8 +138,41 @@ $(document).ready(function () {
         });
     });
 
+    /**
+     * Hide the "Thank You" message, after reopening the FAQ form, after a question was send
+     */
     $('#faq_form_question').on('click', function () {
         $("#ajaxResponse").collapse('hide');
+    });
+
+    /**
+     * ADD VERSE TO FAVS - AJAX
+     */
+    $('.add_to_fav').on('click', function () {
+        var verse_id = this.value;
+        var operation = this.name;
+        var new_operation = operation == 'add' ? 'rem' : 'add';
+        var error_msg_field = '#add_to_fav_error_' + verse_id;
+        var fav_button = '#fav_button_' + verse_id;
+        var fav_button_label = '#fav_button_label_' + verse_id;
+        var fav_button_ico = '#fav_button_ico_' + verse_id;
+        $.ajax({
+            type: 'POST',
+            url: '/verse/store_fav',
+            data: { verse_id: verse_id, operation: operation },
+            success: function success(msg) {
+                $(error_msg_field).collapse('hide');
+                $(fav_button).attr('name', new_operation);
+                $(fav_button).blur();
+                $(fav_button_label).text(msg);
+                $(fav_button_ico).toggleClass('fav_on fav_off');
+            },
+            error: function error() {
+                $(error_msg_field).text('Wystąpił błąd podczas zapisu! Spróbuj później.');
+                $(error_msg_field).collapse('show');
+                $(fav_button_label).text('Błąd');
+            }
+        });
     });
 });
 

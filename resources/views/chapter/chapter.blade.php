@@ -15,8 +15,11 @@
                     <h1>Księga {{$chapter->book_id}} <small>Rozdział {{$chapter->chapter_no}}</small></h1>
                 </div>
                 <div id="chapter_content">
-                    @foreach($chapter->getContent() as $verse)
-                        {{$verse}}
+                    @foreach($chapter->verses as $vid => $verse)
+                        <span id="v_{{$vid}}" class="verse" data-toggle="modal" data-target="#verse_{{$vid}}_modal"
+                              title="{{$verse->additional_info}}">
+                            {{$verse->content}}
+                        </span>
                     @endforeach
                 </div>
                 {{-- NAV AND FAQ --}}
@@ -24,7 +27,8 @@
                 @include('chapter.nav')
             </div>
         </div>
-        {{-- MODAL --}}
+        {{-- MODALS --}}
         @include('chapter.media')
+        @include('chapter.verse')
     </div>
 @endsection

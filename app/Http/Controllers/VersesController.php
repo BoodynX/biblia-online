@@ -2,14 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\VerseUserFav;
 use Illuminate\Http\Request;
-use App\Models\Verse;
-use App\Models\Chapter;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 
 class VersesController extends Controller
 {
-    public function show(int $book, int $chapter, int $verse)
+    public function storeFav(Request $request)
     {
-        return Verse::byBookChapterVerse($book, $chapter, $verse);
+        $fav_verse = VerseUserFav::where([
+            ['verse_id', $request->verse_id],
+            ['user_id' , Auth::id()]
+        ])->first();
+
+        if ($fav_verse === null) {
+            $new_fav_verse = new VerseUserFav;
+            $new_fav_verse->verse_id = $request->verse_id;
+            $new_fav_verse->user_id  = Auth::id();
+            $new_fav_verse->save();
+            $return = Config::get('commons.buttons.rem_from_favs');
+        } else {
+            $fav_verse->delete();
+            $return = Config::get('commons.buttons.add_to_favs');
+        }
+        return $return;
     }
 }
