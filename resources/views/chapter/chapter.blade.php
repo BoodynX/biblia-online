@@ -10,15 +10,15 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md-8 col-md-offset-2">
+            <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
                 <div id="chapter_header" class="page-header">
-                    <h1>Księga {{$chapter->book_id}} <small>Rozdział {{$chapter->chapter_no}}</small></h1>
+                    <h1>Księga {{ $chapter->book_id }} <small>Rozdział {{ $chapter->chapter_no }}</small></h1>
                 </div>
                 <div id="chapter_content">
                     @foreach($chapter->verses as $vid => $verse)
-                        <span id="v_{{$vid}}" class="verse" data-toggle="modal" data-target="#verse_{{$vid}}_modal"
-                              title="Wers {{$verse->verse_no}}. {{$verse->additional_info}}">
-                            {{$verse->content}}
+                        <span id="v_{{ $vid }}" class="verse" data-toggle="modal" data-target="#verse_{{ $vid }}_modal"
+                              title="Wers {{ $verse->verse_no }}. {{ $verse->additional_info }}">
+                            {{ $verse->content }}
                         </span>
                     @endforeach
                 </div>

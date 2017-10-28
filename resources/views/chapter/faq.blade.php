@@ -5,9 +5,9 @@
     <div id="faq_content">
         @foreach($chapter->chapterFaqs as $q)
             <p class="ch_question">
-                <span data-toggle="collapse" data-target="#faq{{$q->id}}" aria-expanded="false">{{$q->question}}</span>
+                <span data-toggle="collapse" data-target="#faq{{ $q->id }}" aria-expanded="false">{{ $q->question }}</span>
             </p>
-            <p id="faq{{$q->id}}" class="collapse ch_answer">{{$q->answere}}</p>
+            <p id="faq{{ $q->id }}" class="collapse ch_answer">{{ $q->answere }}</p>
         @endforeach
             <p class="ch_question">
                 <span id="faq_form_question" class="scrollTo" data-toggle="collapse" data-target="#faq_form" aria-expanded="false">
@@ -16,7 +16,7 @@
             </p>
             <form id="faq_form" class="collapse ch_answer">
                 {{ csrf_field() }}
-                <input type="hidden" name="cid" value="{{$chapter->id}}">
+                <input type="hidden" name="cid" value="{{ $chapter->id }}">
                 <textarea id="user_question" class="form-control" rows="5" name="user_question"></textarea>
                 <button id="faq_submit" type="submit" class="btn btn-default" form="faq_form" value="Submit">
                     Wyślij
