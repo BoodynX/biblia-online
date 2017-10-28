@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             @foreach($books as $book_no => $book_title)
                 <div class="panel panel-default">
                     <div class="panel-heading">Księga {{$book_no}} - {{$book_title}}</div>
