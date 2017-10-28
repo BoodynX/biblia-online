@@ -17,7 +17,7 @@
                 <div id="chapter_content">
                     @foreach($chapter->verses as $vid => $verse)
                         <span id="v_{{$vid}}" class="verse" data-toggle="modal" data-target="#verse_{{$vid}}_modal"
-                              title="{{$verse->additional_info}}">
+                              title="Wers {{$verse->verse_no}}. {{$verse->additional_info}}">
                             {{$verse->content}}
                         </span>
                     @endforeach
