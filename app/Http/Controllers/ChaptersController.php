@@ -40,7 +40,7 @@ class ChaptersController extends Controller
         /* Mark current user step as read */
         $this->currentUserStepRead($r);
         /* Go to end screen */
-        return view('the-end');
+        return redirect('start');
     }
 
     /**
@@ -50,9 +50,15 @@ class ChaptersController extends Controller
     public function findNextStep()
     {
         /* Find next step */
-        $chapter = $this->nextStep(false);
-        /* Redirect to next step */
-        return redirect('ksiega/'.$chapter->book_id.'/rozdzial/'.$chapter->chapter_no);
+        $next_chapter = $this->nextStep(false);
+        if ($next_chapter->the_end) {
+            /* If there are now chapters to be read redirect to start */
+            $return = redirect('start');
+        } else {
+            /* Redirect to next step */
+            $return = redirect('ksiega/'.$next_chapter->book_id.'/rozdzial/'.$next_chapter->chapter_no);
+        }
+        return $return;
     }
 
     public function storeQuestion(Request $request, ChapterUserQuestion $question)
@@ -76,6 +82,20 @@ class ChaptersController extends Controller
      */
     private function nextStep($chapter_id, $book_no = false) : stdClass
     {
+        $left_to_read = UserPlanStep::where('status', 'new')->count();
+        if ($left_to_read < 2) {
+            /**
+             * If there are no unread chapters or only one is left, hide the "next step" and "next chapter" navigation
+             * buttons and show a "Start" button
+             */
+            $next_step = new stdClass();
+            $next_step->loop = false;
+            $next_step->the_end = true;
+            return $next_step;
+            /**
+             * THE END
+             */
+        }
         $user_id = Auth::id();
         $conditions = [
             ['user_plan_days.user_id', $user_id],
@@ -87,19 +107,26 @@ class ChaptersController extends Controller
         if ($book_no !== false) {
             $conditions[] = ['chapters.book_id', '>', $book_no];
         }
-        $next_step = DB::table('user_plan_days')
-            ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
-            ->leftJoin('plan_steps', 'user_plan_steps.plan_step_id', '=', 'plan_steps.id')
-            ->leftJoin('chapters', 'plan_steps.chapter_id', '=', 'chapters.id')
-            ->select('chapters.id', 'chapters.chapter_no', 'chapters.book_id','user_plan_steps.status')
-            ->where($conditions)
-            ->orderBy('chapters.id', 'asc')->take(1)->first();
+        $next_step = $this->checkUserPlanDays($conditions);
+        /* If there is no unread chapters after the current one, than check if there are any unread chapters at all */
         if ($next_step === null) {
-            $next_step = new stdClass();
-            $next_step->the_end = true;
+            $conditions = [
+                ['user_plan_days.user_id', $user_id],
+                ['user_plan_steps.status', 'new']
+            ];
+            $next_step = $this->checkUserPlanDays($conditions);
+            $next_step_proto = new stdClass();
+            $next_step_proto->loop = true;
+            $next_step_proto->chapter_no = $next_step->chapter_no;
+            $next_step_proto->book_id = $next_step->book_id;
+            $next_step = $next_step_proto;
         } else {
-            $next_step->the_end = false;
+            $next_step->loop = false;
         }
+
+        /* If its not the end let them know :) */
+        $next_step->the_end = false;
+
         return $next_step;
     }
 
@@ -150,13 +177,12 @@ class ChaptersController extends Controller
             ['chapters.book_id', $book_no]
         ];
 
-        $new_chapter = DB::table('user_plan_days')
-            ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
-            ->leftJoin('plan_steps', 'user_plan_steps.plan_step_id', '=', 'plan_steps.id')
-            ->leftJoin('chapters', 'plan_steps.chapter_id', '=', 'chapters.id')
-            ->select('chapters.id', 'chapters.chapter_no', 'chapters.book_id','user_plan_steps.status')
-            ->where($conditions)
-            ->orderBy('chapters.chapter_no', 'asc')->take(1)->first();
+        $new_chapter = $this->checkUserPlanDays($conditions);
+
+        /* When every thing is read than there is no 'user_plan_steps.status' = 'new' */
+        if ($new_chapter === null) {
+            return true;
+        }
 
         if (!isset($new_chapter->chapter_no)) {
             return false;
@@ -167,5 +193,16 @@ class ChaptersController extends Controller
         } else {
             return false;
         }
+    }
+
+    private function checkUserPlanDays(array $conditions)
+    {
+        return DB::table('user_plan_days')
+            ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
+            ->leftJoin('plan_steps', 'user_plan_steps.plan_step_id', '=', 'plan_steps.id')
+            ->leftJoin('chapters', 'plan_steps.chapter_id', '=', 'chapters.id')
+            ->select('chapters.id', 'chapters.chapter_no', 'chapters.book_id','user_plan_steps.status')
+            ->where($conditions)
+            ->orderBy('chapters.id', 'asc')->take(1)->first();
     }
 }

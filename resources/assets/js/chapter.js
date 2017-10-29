@@ -29,15 +29,19 @@ $(document).ready(function() {
      */
     $('.navButton').on('click', function() {
         var elem = $(this);
-        if (elem[0].value == 'next_step') {
-            var book    = elem[0].dataset.book
-            var chapter = elem[0].dataset.chapter
+        if (elem[0].value == 'the_end') {
+            document.chapter_nav_buttons.action = '/last';
+        } else {
+            if (elem[0].value == 'next_step') {
+                var book    = elem[0].dataset.book
+                var chapter = elem[0].dataset.chapter
+            }
+            if (elem[0].value == 'next_book') {
+                var book    = elem[0].dataset.book
+                var chapter = elem[0].dataset.chapter
+            }
+            document.chapter_nav_buttons.action = '/ksiega/' + book + '/rozdzial/' + chapter;
         }
-        if (elem[0].value == 'next_book') {
-            var book    = elem[0].dataset.book
-            var chapter = elem[0].dataset.chapter
-        }
-        document.chapter_nav_buttons.action = '/ksiega/' + book + '/rozdzial/' + chapter;
     });
 
     /**
