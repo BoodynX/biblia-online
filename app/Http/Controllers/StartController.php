@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserPlanDay;
+use App\Models\VerseUserFav;
 use Auth;
 
 class StartController extends Controller
@@ -39,6 +40,9 @@ class StartController extends Controller
                 $chapters[$chapter->book_id][$chapter->id] = $chapter;
             }
         }
-        return view('start', compact('books', 'chapters'));
+
+        $fav_verses = VerseUserFav::where('user_id', Auth::id())->with('verse.chapter.book')->get();
+
+        return view('start', compact('books', 'chapters', 'fav_verses'));
     }
 }

@@ -1,0 +1,58 @@
+/* START STYLE */
+@import "variables";
+
+////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////
+
+h2 {
+  text-align: center;
+}
+h4 {
+  line-height: 25px;
+  padding: 5px 15px !important;
+  cursor: pointer;
+}
+
+////////////////////////////////////////////////////////
+// Chapters list
+////////////////////////////////////////////////////////
+
+.chapters_list {
+  margin-left: 30px;
+  column-width: 150px;
+  margin-bottom: 0px;
+}
+.chapters_list li {
+  line-height: 30px;
+  cursor: pointer;
+}
+.chapters_list li a {
+  display: block;
+  text-decoration: none;
+}
+.chapters_list li a:hover {
+  background-color: $text-hl;
+  text-decoration: none;
+}
+.chapter_list_item {
+  display: block;
+  padding-left: 10px;
+}
+
+////////////////////////////////////////////////////////
+// Fav Verses
+////////////////////////////////////////////////////////
+
+.fav_quotes_block {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.favs_quote {
+  font-style: italic;
+}
+.favs_quote_origin {
+  font-weight: bold;
+  font-size: small;
+  margin-bottom: 20px;
+}

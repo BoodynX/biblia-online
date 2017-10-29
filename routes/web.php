@@ -20,7 +20,7 @@ Route::get('/', function () {return view('welcome');});
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@show');
     Route::post('/ksiega/{book}/rozdzial/{chapter}', 'ChaptersController@showNext');
-    Route::post('/koniec', 'ChaptersController@showEnd');
+    Route::post('/last', 'ChaptersController@showEnd');
     Route::get('/nastepny_krok', 'ChaptersController@findNextStep');
     Route::get('/start', 'StartController@index')->name('start');
 

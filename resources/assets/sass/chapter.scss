@@ -1,5 +1,5 @@
 /* CHAPTER STYLE */
-
+@import "variables";
 ////////////////////////////////////////////////////////
 // Verse
 ////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@
   cursor:pointer;
 }
 .verse:hover {
-  background-color: #e1e4fa;
+  background-color: $text-hl;
   transition: background-color 0.3s;
   transition-delay: 0.2s;
 }
@@ -43,7 +43,7 @@
   margin: 0;
 }
 #faq_form_question {
-  color: #3869D4;
+  color: $text-blue;
 }
 #user_question_field {
   margin-bottom: 10px;
