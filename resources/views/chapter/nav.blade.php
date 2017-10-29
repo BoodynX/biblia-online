@@ -5,7 +5,7 @@
         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#chapter_media_modal">
             Media
         </button>
-        <button type="button" class="btn btn-default scrollTo" data-toggle="collapse" data-target="#faq"
+        <button type="button" class="btn btn-default scroll_target_to_top" data-toggle="collapse" data-target="#faq"
                 aria-expanded="false">
             FAQ
         </button>

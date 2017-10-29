@@ -10,7 +10,7 @@
             <p id="faq{{ $q->id }}" class="collapse ch_answer">{{ $q->answere }}</p>
         @endforeach
             <p class="ch_question">
-                <span id="faq_form_question" class="scrollTo" data-toggle="collapse" data-target="#faq_form" aria-expanded="false">
+                <span id="faq_form_question" class="scroll_target_to_top" data-toggle="collapse" data-target="#faq_form" aria-expanded="false">
                     Masz więcej pytań? Napisz do nas!
                 </span>
             </p>

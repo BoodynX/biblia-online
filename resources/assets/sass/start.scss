@@ -13,6 +13,11 @@ h4 {
   padding: 5px 15px !important;
   cursor: pointer;
 }
+h4 span.label {
+  vertical-align: super;
+  font-size: 50%;
+  margin-left: 5px;
+}
 
 ////////////////////////////////////////////////////////
 // Chapters list
@@ -38,6 +43,9 @@ h4 {
 .chapter_list_item {
   display: block;
   padding-left: 10px;
+}
+.chapter_list_item span.label {
+  margin-left: 5px;
 }
 
 ////////////////////////////////////////////////////////

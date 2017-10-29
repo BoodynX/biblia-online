@@ -83,8 +83,14 @@
         @yield('content')
     </div>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-    @yield('scripts-after')
 </body>
+<footer class="footer">
+    <hr>
+    <p class="muted">© 2017 Biblia Online</p>
+</footer>
+
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
+@yield('scripts-after')
+
 </html>

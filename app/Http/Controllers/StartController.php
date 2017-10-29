@@ -31,16 +31,17 @@ class StartController extends Controller
                 if (!in_array($chapter->book_id, $books_with_next_new_chapter) && $user_plan_step->status === 'new') {
                     $chapter->setIsNext(true);
                     $books_with_next_new_chapter[] = $chapter->book_id;
+                    $books[$chapter->book_id]['has_new'] = true;
                 } else {
                     $chapter->setIsNext(false);
                 }
                 /* Build books info array for the view */
-                $books[$chapter->book_id] = $chapter->book->title;
+                $books[$chapter->book_id]['title'] = $chapter->book->title;
                 /* Build chapters info array for the view */
                 $chapters[$chapter->book_id][$chapter->id] = $chapter;
             }
         }
-
+        ksort($books);
         $fav_verses = VerseUserFav::where('user_id', Auth::id())->with('verse.chapter.book')->get();
 
         return view('start', compact('books', 'chapters', 'fav_verses'));

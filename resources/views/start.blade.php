@@ -12,9 +12,13 @@
     <div class="row">
         <div class="col-md-6 col-sm-12">
             <h2 class="page-header">KSIĘGI</h2>
-            @foreach($books as $book_no => $book_title)
-                <h4 data-toggle="collapse" data-target="#book_{{ $book_no }}" aria-expanded="false">
-                    Księga {{$book_no}} - {{$book_title}}
+            @foreach($books as $book_no => $book_data)
+                <h4 id="book_{{ $book_no }}_header" class="scroll_to_top collapsed"
+                    data-toggle="collapse" data-target="#book_{{ $book_no }}" aria-expanded="false">
+                    Księga {{ $book_no }} - {{ $book_data['title'] }}
+                    @if (isset($book_data['has_new']))
+                        <span class="label label-info">N</span>
+                    @endif
                 </h4>
                 <div id="book_{{ $book_no }}" class="collapse">
                 <ul class="list-unstyled chapters_list">
@@ -22,16 +26,16 @@
                         <li>
                             @if ($c->getStatus() == 'new')
                                 @if ($c->getIsNext())
-                                    <a href="ksiega/{{$c->book_id}}/rozdzial/{{$c->chapter_no}}" class="chapter_list_item">
-                                        Rozdział {{$c->chapter_no}}
+                                    <a href="ksiega/{{ $c->book_id }}/rozdzial/{{ $c->chapter_no }}" class="chapter_list_item">
+                                        Rozdział {{ $c->chapter_no }}
                                         <span class="label label-info">Nowy</span>
                                     </a>
                                 @else
-                                    <span class="chapter_list_item">Rozdział {{$c->chapter_no}}</span>
+                                    <span class="chapter_list_item">Rozdział {{ $c->chapter_no }}</span>
                                 @endif
                             @else
-                                <a href="ksiega/{{$c->book_id}}/rozdzial/{{$c->chapter_no}}" class="chapter_list_item">
-                                    Rozdział {{$c->chapter_no}}
+                                <a href="ksiega/{{ $c->book_id }}/rozdzial/{{ $c->chapter_no }}" class="chapter_list_item">
+                                    Rozdział {{ $c->chapter_no }}
                                 </a>
                             @endif
                         </li>
@@ -42,14 +46,17 @@
         </div>
         <div class="col-md-6 col-sm-12">
             <h2 class="page-header">ULUBIONE WERSY</h2>
-            <div class="clearfix fav_quotes_block">
+            <div class="fav_quotes_block">
                 @foreach($fav_verses as $fav)
-                    <p class="favs_quote pull-left">"{{ $fav->verse->content }}"</p>
-                    <p class="favs_quote_origin pull-right">
-                        Księga {{ $fav->verse->chapter->book_id }},
-                        Rozdział {{ $fav->verse->chapter->chapter_no }},
-                        Wers {{ $fav->verse->verse_no }}
-                    </p>
+                    <div class="clearfix">
+                        <p class="favs_quote pull-left">"{{ $fav->verse->content }}"</p>
+                        <p class="favs_quote_origin pull-right">
+                            Księga {{ $fav->verse->chapter->book_id }},
+                            Rozdział {{ $fav->verse->chapter->chapter_no }},
+                            Wers {{ $fav->verse->verse_no }}
+                        </p>
+                    </div>
+                    <hr>
                 @endforeach
             </div>
         </div>
