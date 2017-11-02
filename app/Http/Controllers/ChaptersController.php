@@ -75,64 +75,77 @@ class ChaptersController extends Controller
         return $response;
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// PRIVATES
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
      * @param int       $chapter_id     Next after this chapter id
-     * @param int|bool  $book_no           Next after this book id/no
+     * @param int|bool  $book_no        Next after this book id/no
      * @return stdClass
      */
     private function nextStep($chapter_id, $book_no = false) : stdClass
     {
-	$left_to_read = DB::table('user_plan_days')
+        $user_id = Auth::id();
+        /**
+         * Check if there are any new steps left_to_read
+         */
+        $conditions = [
+            ['user_plan_steps.status', 'new'],
+            ['user_id', $user_id]
+        ];
+        $left_to_read = DB::table('user_plan_days')
             ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
             ->select('user_plan_steps.status')
-            ->where([['user_plan_steps.status', 'new'],['user_id', Auth::id()]])->count();
-	// dd($left_to_read);
-        //$left_to_read = UserPlanStep::where([['status', 'new'],['user_id', Auth::id()]])->count();
-	//dd($left_to_read);
+            ->where($conditions)->count();
+
         if ($left_to_read < 2) {
             /**
-             * If there are no unread chapters or only one is left, hide the "next step" and "next chapter" navigation
-             * buttons and show a "Start" button
+             * If there are no unread chapters or only one is left, HIDE the 'next step' and 'next chapter' navigation
+             * buttons and show a 'Start' button
              */
             $next_step = new stdClass();
-            $next_step->loop = false;
+            $next_step->loop    = false;
             $next_step->the_end = true;
-            return $next_step;
+        } else {
             /**
-             * THE END
+             * If there are more steps to read find the next one after current chapter one
              */
-        }
-        $user_id = Auth::id();
-        $conditions = [
-            ['user_plan_days.user_id', $user_id],
-            ['user_plan_steps.status', 'new']
-        ];
-        if ($chapter_id) {
-            $conditions[] = ['chapters.id', '>', $chapter_id];
-        }
-        if ($book_no !== false) {
-            $conditions[] = ['chapters.book_id', '>', $book_no];
-        }
-        $next_step = $this->checkUserPlanDays($conditions);
-        /* If there is no unread chapters after the current one, than check if there are any unread chapters at all */
-        if ($next_step === null) {
             $conditions = [
                 ['user_plan_days.user_id', $user_id],
-                ['user_plan_steps.status', 'new']
+                ['user_plan_steps.status', 'new'],
+                ['chapters.id', '>', $chapter_id]
             ];
-            $next_step = $this->checkUserPlanDays($conditions);
-            $next_step_proto = new stdClass();
-            $next_step_proto->loop = true;
-            $next_step_proto->chapter_no = $next_step->chapter_no;
-            $next_step_proto->book_id = $next_step->book_id;
-            $next_step = $next_step_proto;
-        } else {
-            $next_step->loop = false;
+            if ($book_no !== false) {
+                $conditions[] = ['chapters.book_id', '>', $book_no];
+            }
+            $next_step = $this->getFirstUserPlanStepAccordingTo($conditions);
+            /**
+             * If there is no unread chapters after the current one, find the first unread in general, and LOOP BACK to it
+             * with a dedicated button and hide the 'next' buttons
+             */
+            if ($next_step === null) {
+                $conditions = [
+                    ['user_plan_days.user_id', $user_id],
+                    ['user_plan_steps.status', 'new']
+                ];
+                $next_step = $this->getFirstUserPlanStepAccordingTo($conditions);
+                $next_step_prototype = new stdClass();
+                $next_step_prototype->loop = true;
+                $next_step_prototype->chapter_no = $next_step->chapter_no;
+                $next_step_prototype->book_id = $next_step->book_id;
+                $next_step = $next_step_prototype;
+            } else {
+                /**
+                 * If there is more don't loop back, show the 'next' button/s
+                 */
+                $next_step->loop = false;
+            }
+            /**
+             * If its not the end let them know :)
+             */
+            $next_step->the_end = false;
         }
-
-        /* If its not the end let them know :) */
-        $next_step->the_end = false;
-
         return $next_step;
     }
 
@@ -175,33 +188,49 @@ class ChaptersController extends Controller
     private function isChapterUnlocked($book_no, $chapter_no)
     {
         $user_id = Auth::id();
-
-        /* @TODO access control logic */
+        /**
+         * Get the FIRST new user_plan_step for given chapter
+         */
         $conditions = [
             ['user_plan_days.user_id', $user_id],
             ['user_plan_steps.status', 'new'],
             ['chapters.book_id', $book_no]
         ];
+        $first_new_step = $this->getFirstUserPlanStepAccordingTo($conditions);
 
-        $new_chapter = $this->checkUserPlanDays($conditions);
-
-        /* When every thing is read than there is no 'user_plan_steps.status' = 'new' */
-        if ($new_chapter === null) {
-            return true;
-        }
-
-        if (!isset($new_chapter->chapter_no)) {
-            return false;
-        }
-
-        if ($new_chapter->chapter_no >= $chapter_no) {
-            return true;
+        if ($first_new_step !== null) {
+            /**
+             * If there are 'new' steps to read see if the requested chapter is the first one of them
+             */
+            if ($first_new_step->chapter_no >= $chapter_no) {
+                $return = true;
+            } else {
+                $return = false;
+            }
         } else {
-            return false;
+            /**
+             * If no 'new' see if there are 'done' user_plan_steps for given chapter
+             */
+            $conditions = [
+                ['user_plan_days.user_id', $user_id],
+                ['user_plan_steps.status', 'done'],
+                ['chapters.book_id', $book_no]
+            ];
+            $done_step = $this->getFirstUserPlanStepAccordingTo($conditions);
+
+            if ($done_step === null) {
+                /* if there are no 'new' and 'done' steps than the chapter in unavailable */
+                $return = false;
+            } else {
+                /* if there are no 'new' but here are 'done' chapters than the whole book is available */
+                $return = true;
+            }
         }
+
+        return $return;
     }
 
-    private function checkUserPlanDays(array $conditions)
+    private function getFirstUserPlanStepAccordingTo(array $conditions)
     {
         return DB::table('user_plan_days')
             ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
