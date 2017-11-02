@@ -82,7 +82,13 @@ class ChaptersController extends Controller
      */
     private function nextStep($chapter_id, $book_no = false) : stdClass
     {
-        $left_to_read = UserPlanStep::where('status', 'new')->count();
+	$left_to_read = DB::table('user_plan_days')
+            ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
+            ->select('user_plan_steps.status')
+            ->where([['user_plan_steps.status', 'new'],['user_id', Auth::id()]])->count();
+	// dd($left_to_read);
+        //$left_to_read = UserPlanStep::where([['status', 'new'],['user_id', Auth::id()]])->count();
+	//dd($left_to_read);
         if ($left_to_read < 2) {
             /**
              * If there are no unread chapters or only one is left, hide the "next step" and "next chapter" navigation
