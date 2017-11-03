@@ -13,6 +13,10 @@ use stdClass;
 class ChaptersController extends Controller
 {
     const LAST_BOOK = 73;
+    /**
+     * @TODO make:
+     * - DocBlocks for all methods
+     */
 
     public function show(int $book_no, int $chapter_no)
     {
@@ -20,10 +24,12 @@ class ChaptersController extends Controller
         if (! $this->isChapterUnlocked($book_no, $chapter_no)) {
             return redirect()->route('start');
         }
-        /* Get required data and display the chapter */
+        /* Get chapter data */
         $chapter   = Chapter::byBookChapter($book_no, $chapter_no);
+        /* Get next step in general */
         $next_step = $this->nextStep($chapter->id);
-        $next_book = $this->nextStepInNextBook($chapter->book_id);
+        /* Get next step in next book */
+        $next_book = $this->nextStep(false, $chapter->book_id);
         return view('chapter.chapter', compact('chapter', 'next_step', 'next_book'));
     }
 
@@ -120,11 +126,12 @@ class ChaptersController extends Controller
                 $conditions[] = ['chapters.book_id', '>', $book_no];
             }
             $next_step = $this->getFirstUserPlanStepAccordingTo($conditions);
-            /**
-             * If there is no unread chapters after the current one, find the first unread in general, and LOOP BACK to it
-             * with a dedicated button and hide the 'next' buttons
-             */
+
             if ($next_step === null) {
+                /**
+                 * If there is no unread chapters after the current one, find the first unread in general, and LOOP BACK to it
+                 * with a dedicated button and hide the 'next' buttons
+                 */
                 $conditions = [
                     ['user_plan_days.user_id', $user_id],
                     ['user_plan_steps.status', 'new']
@@ -147,18 +154,6 @@ class ChaptersController extends Controller
             $next_step->the_end = false;
         }
         return $next_step;
-    }
-
-    private function nextStepInNextBook($book_no) : stdClass
-    {
-        if ($book_no < self::LAST_BOOK) {
-            /* If there are no more books unlocked the nextStep will return stdObject->the_end = true */
-            $next_book = $this->nextStep(false, $book_no);
-        } else {
-            $next_book = new stdClass;
-            $next_book->the_end = true;
-        }
-        return $next_book;
     }
 
     private function currentUserStepRead(Request $r)
@@ -187,6 +182,13 @@ class ChaptersController extends Controller
 
     private function isChapterUnlocked($book_no, $chapter_no)
     {
+        /**
+         * @TODO just make loop through users steps in this chapter and see
+         * - if its 'done'
+         * - or the first 'new'
+         * - else no access
+         */
+
         $user_id = Auth::id();
         /**
          * Get the FIRST new user_plan_step for given chapter
@@ -232,6 +234,9 @@ class ChaptersController extends Controller
 
     private function getFirstUserPlanStepAccordingTo(array $conditions)
     {
+        /**
+         * @TODO make this: getUserPlanStepAccordingTo(array $conditions, bool $get_first = false)
+         */
         return DB::table('user_plan_days')
             ->leftJoin('user_plan_steps', 'user_plan_days.id', '=', 'user_plan_steps.user_plan_day_id')
             ->leftJoin('plan_steps', 'user_plan_steps.plan_step_id', '=', 'plan_steps.id')
