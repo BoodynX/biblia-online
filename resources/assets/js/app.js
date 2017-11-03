@@ -36,8 +36,8 @@ $(document).ready(function() {
         if ($(this).hasClass('collapsed')) {
             setTimeout(function (){
                 $('html, body').animate({
-                    scrollTop: $(elem).offset().top - 200
-                }, 1000);
+                    scrollTop: $(elem).offset().top - 100
+                }, 400);
             }, 1);
         }
     });
