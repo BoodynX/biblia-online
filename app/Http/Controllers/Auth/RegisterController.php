@@ -33,7 +33,7 @@ class RegisterController extends Controller
     /**
      * Numbers of days unlocked upon registration
      */
-    const NO_OF_DAYS_UNL_ON_REG = 1;
+    const NUMBER_OF_DAYS_UNLOCKED_ON_REGISTRATION = 1;
 
     public function __construct()
     {
@@ -78,7 +78,7 @@ class RegisterController extends Controller
          * New user needs a reading plan for his first day. Here we create a first day record and we are making
          * his personal copy of the first day plan from the plan_steps table.
          */
-        ReaderProgress::update($user->id, self::NO_OF_DAYS_UNL_ON_REG);
+        ReaderProgress::unlock($user->id, self::NUMBER_OF_DAYS_UNLOCKED_ON_REGISTRATION);
 
         return $user;
     }

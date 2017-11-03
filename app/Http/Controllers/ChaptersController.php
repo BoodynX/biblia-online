@@ -16,9 +16,7 @@ use stdClass;
  */
 class ChaptersController extends Controller
 {
-    /**
-     * @const number of books in the bible.
-     */
+    /** @const number of books in the bible. */
     const LAST_BOOK = 73;
 
     /**
