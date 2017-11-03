@@ -12,7 +12,7 @@
 
         @if ($next_step->the_end)
             <button type="submit" class="btn btn-default navButton" value="the_end" name="chapter_nav_button" form="chapter_nav">
-                Start
+                Koniec
             </button>
         @elseif ($next_step->loop)
             <button type="submit" class="btn btn-default navButton" value="next_step" name="chapter_nav_button" form="chapter_nav"
