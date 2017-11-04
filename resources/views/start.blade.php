@@ -49,11 +49,11 @@
             <div class="fav_quotes_block">
                 @foreach($fav_verses as $fav)
                     <div class="clearfix">
-                        <p class="favs_quote pull-left">"{{ $fav->verse->content }}"</p>
+                        <p class="favs_quote pull-left">"{{ $fav->content }}"</p>
                         <p class="favs_quote_origin pull-right">
-                            Księga {{ $fav->verse->chapter->book_id }},
-                            Rozdział {{ $fav->verse->chapter->chapter_no }},
-                            Wers {{ $fav->verse->verse_no }}
+                            Księga {{ $fav->book_id }},
+                            Rozdział {{ $fav->chapter_no }},
+                            Wers {{ $fav->verse_no }}
                         </p>
                     </div>
                     <hr>

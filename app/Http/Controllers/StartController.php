@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserPlanDay;
-use App\Models\VerseUserFav;
+use DB;
 use Auth;
 
 class StartController extends Controller
@@ -42,7 +42,16 @@ class StartController extends Controller
             }
         }
         ksort($books);
-        $fav_verses = VerseUserFav::where('user_id', Auth::id())->with('verse.chapter.book')->get();
+        $fav_verses = DB::table('verse_user_favs')
+            ->leftJoin('verses', 'verses.id', '=', 'verse_user_favs.verse_id')
+            ->leftJoin('chapters', 'chapters.id', '=', 'verses.chapter_id')
+            ->leftJoin('books', 'books.id', '=', 'chapters.book_id')
+            ->select('book_id', 'chapter_no', 'verse_no', 'content')
+            ->where('user_id', Auth::id())
+            ->orderBy('books.id', 'asc')
+            ->orderBy('chapters.chapter_no', 'asc')
+            ->orderBy('verses.verse_no', 'asc')
+            ->get();
 
         return view('start', compact('books', 'chapters', 'fav_verses'));
     }
