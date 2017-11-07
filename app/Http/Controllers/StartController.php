@@ -46,13 +46,13 @@ class StartController extends Controller
             ->leftJoin('verses', 'verses.id', '=', 'verse_user_favs.verse_id')
             ->leftJoin('chapters', 'chapters.id', '=', 'verses.chapter_id')
             ->leftJoin('books', 'books.id', '=', 'chapters.book_id')
-            ->select('book_id', 'chapter_no', 'verse_no', 'content')
+            ->select('book_id', 'chapter_no', 'verse_no', 'verse_id', 'content', 'additional_info')
             ->where('user_id', Auth::id())
             ->orderBy('books.id', 'asc')
             ->orderBy('chapters.chapter_no', 'asc')
             ->orderBy('verses.verse_no', 'asc')
             ->get();
 
-        return view('start', compact('books', 'chapters', 'fav_verses'));
+        return view('start.start', compact('books', 'chapters', 'fav_verses'));
     }
 }

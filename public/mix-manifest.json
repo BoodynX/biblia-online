@@ -4,5 +4,6 @@
   "/js/chapter.js": "/js/chapter.js",
   "/css/chapter.css": "/css/chapter.css",
   "/css/start.css": "/css/start.css",
-  "/js/start.js": "/js/start.js"
+  "/js/start.js": "/js/start.js",
+  "/js/verse.js": "/js/verse.js"
 }

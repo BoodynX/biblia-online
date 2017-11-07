@@ -5,6 +5,7 @@
 @endsection
 @section('scripts-after')
     <script type="text/javascript" src="{{ asset('js/chapter.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/verse.js') }}"></script>
 @endsection
 
 @section('content')
@@ -28,7 +29,7 @@
             </div>
         </div>
         {{-- MODALS --}}
-        @include('chapter.media')
-        @include('chapter.verse')
+        @include('chapter.media-modal')
+        @include('chapter.verse-modal')
     </div>
 @endsection

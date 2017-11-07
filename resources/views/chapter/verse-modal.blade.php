@@ -28,9 +28,9 @@
                         <span id="fav_button_ico_{{$verse->id}}" aria-hidden="true"
                               {{-- Change the color of the star/fav icon --}}
                               @if($verse->verseUserFavs()->first() !== null)
-                              class="glyphicon glyphicon-star button_ico fav_on"
+                              class="glyphicon glyphicon-star fav_button_ico fav_on"
                               @else
-                              class="glyphicon glyphicon-star button_ico fav_off"
+                              class="glyphicon glyphicon-star fav_button_ico fav_off"
                                 @endif
                         ></span>
                     </button>

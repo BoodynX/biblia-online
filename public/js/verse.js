@@ -63,69 +63,53 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 40);
+/******/ 	return __webpack_require__(__webpack_require__.s = 42);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 40:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(8);
-
-
-/***/ }),
-
-/***/ 8:
+/***/ 10:
 /***/ (function(module, exports) {
 
 $(document).ready(function () {
     /**
-     * SWITCH FORM ACTION ATTR ON CLICK
-     * Changes the forms action attr depending on which button was pushed
-     * button determined by value attr
+     * ADD VERSE TO FAVS - AJAX
      */
-    $('.navButton').on('click', function () {
-        var elem = $(this);
-        if (elem[0].value == 'the_end') {
-            document.chapter_nav_buttons.action = '/last';
-        } else {
-            if (elem[0].value == 'next_step') {
-                var book = elem[0].dataset.book;
-                var chapter = elem[0].dataset.chapter;
-            }
-            if (elem[0].value == 'next_book') {
-                var book = elem[0].dataset.book;
-                var chapter = elem[0].dataset.chapter;
-            }
-            document.chapter_nav_buttons.action = '/ksiega/' + book + '/rozdzial/' + chapter;
-        }
-    });
-
-    /**
-     * SEND QUESTION - AJAX
-     */
-    $('#faq_form').on('submit', function (e) {
-        e.preventDefault();
+    $('.add_to_fav').on('click', function () {
+        var verse_id = this.value;
+        var operation = this.name;
+        var new_operation = operation == 'add' ? 'rem' : 'add';
+        var error_msg_field = '#add_to_fav_error_' + verse_id;
+        var fav_button = '#fav_button_' + verse_id;
+        var fav_button_label = '#fav_button_label_' + verse_id;
+        var fav_button_ico = '#fav_button_ico_' + verse_id;
         $.ajax({
-            type: "POST",
-            url: '/chapter/send_question',
-            data: $('#faq_form').serialize(),
+            type: 'POST',
+            url: '/verse/store_fav',
+            data: { verse_id: verse_id, operation: operation },
             success: function success(msg) {
-                $("#faq_form").collapse('hide');
-                $("#ajaxResponse").text(msg);
-                $("#ajaxResponse").collapse('show');
+                $(error_msg_field).collapse('hide');
+                $(fav_button).attr('name', new_operation);
+                $(fav_button).blur();
+                $(fav_button_label).text(msg);
+                $(fav_button_ico).toggleClass('fav_on fav_off');
+            },
+            error: function error() {
+                $(error_msg_field).text('Wystąpił błąd podczas zapisu! Spróbuj później.');
+                $(error_msg_field).collapse('show');
+                $(fav_button_label).text('Błąd');
             }
         });
     });
-
-    /**
-     * Hide the "Thank You" message, after reopening the FAQ form, after a question was send
-     */
-    $('#faq_form_question').on('click', function () {
-        $("#ajaxResponse").collapse('hide');
-    });
 });
+
+/***/ }),
+
+/***/ 42:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(10);
+
 
 /***/ })
 

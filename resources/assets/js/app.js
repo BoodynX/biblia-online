@@ -2,6 +2,13 @@ require('./bootstrap');
 
 $(document).ready(function() {
 
+    /** Automatically add the CSRF token to all request headers */
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
     /**
      *  We don't want the buttons to stay focused after they are clicked
      */
