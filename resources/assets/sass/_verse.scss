@@ -1,0 +1,28 @@
+@import "variables";
+////////////////////////////////////////////////////////
+// Verse
+////////////////////////////////////////////////////////
+.verse {
+  padding: 5px 1px;
+  border-radius: $std-radius;
+  transition: background-color 0.3s;
+  cursor:pointer;
+}
+.verse:hover {
+  background-color: $text-hl;
+  transition: background-color 0.3s;
+  transition-delay: 0.2s;
+}
+
+.verse_modal_header {
+  margin-top: 25px;
+  font-weight: bold;
+}
+.verse_modal_header:first-child {
+  margin-top: 5px;
+}
+.fav_button_ico {
+  margin-left: 7px;
+  font-size: large;
+  top: 3px;
+}

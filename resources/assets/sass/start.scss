@@ -1,19 +1,21 @@
 /* START STYLE */
 @import "variables";
+@import "verse";
 
 ////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////
 
-h2 {
+h2.start_header {
   text-align: center;
 }
-h4 {
+h4.start_book_item {
   line-height: 25px;
   padding: 5px 15px !important;
   cursor: pointer;
 }
-h4 span.label {
+/* The little N next to the chapter title */
+.start_n_label {
   vertical-align: super;
   font-size: 50%;
   margin-left: 5px;
@@ -39,6 +41,7 @@ h4 span.label {
 .chapters_list li a:hover {
   background-color: $text-hl;
   text-decoration: none;
+  border-radius: $std-radius;
 }
 .chapter_list_item {
   display: block;
@@ -58,6 +61,7 @@ h4 span.label {
 }
 .favs_quote {
   font-style: italic;
+  padding: 5px;
 }
 .favs_quote_origin {
   font-weight: bold;
