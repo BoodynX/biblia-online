@@ -37,7 +37,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ url('/start') }}">
                         {{ config('app.name', 'Bible') }}
                     </a>
                 </div>
@@ -45,7 +45,7 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        &nbsp;<li><a href="/start">Start</a></li>
+                        <li><a href="{{ url('/nastepny_krok') }}">Czytaj dalej</a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
