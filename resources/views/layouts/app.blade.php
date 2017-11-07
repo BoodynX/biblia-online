@@ -45,7 +45,9 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/nastepny_krok') }}">Czytaj dalej</a></li>
+                        @if (!Request::is('ksiega/*/rozdzial/*'))
+                            <li><a href="{{ url('/nastepny_krok') }}">Czytaj dalej</a></li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
