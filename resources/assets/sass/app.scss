@@ -15,7 +15,6 @@
 .navbar-brand {
   font-weight:bold;
 }
-
 .alert {
   margin-top:-22px;
 }
@@ -35,11 +34,9 @@
 div.page-header h1 small {
   margin-left: 2%;
 }
-
 .fav_on {
   color: #ffc101;
 }
-
 .fav_off {
   color: lightgray;
 }
@@ -68,4 +65,19 @@ body {
 }
 .footer p {
   margin-left: 15px;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// hacks
+///////////////////////////////////////////////////////////////////////////////
+
+/* These used on a <p> are a hacks to make the BS3 collapese work smoothley */
+/* On an inside of collapsible div, at the bottom*/
+.collapse_hack_1 {
+  margin: 0;
+}
+/* Between two blocks with margins */
+.collapse_hack_2 {
+  margin: 0;
+  line-height: 0px;
 }

@@ -7,6 +7,7 @@
             <p class="ch_question">
                 <span data-toggle="collapse" data-target="#faq{{ $q->id }}" aria-expanded="false">{{ $q->question }}</span>
             </p>
+            <p class="collapse_hack_2">&nbsp;</p>
             <p id="faq{{ $q->id }}" class="collapse ch_answer">{{ $q->answere }}</p>
         @endforeach
             <p class="ch_question">
@@ -14,7 +15,8 @@
                     Masz więcej pytań? Napisz do nas!
                 </span>
             </p>
-            <form id="faq_form" class="collapse ch_answer">
+            <p class="collapse_hack_2">&nbsp;</p>
+            <form id="faq_form" class="collapse">
                 {{ csrf_field() }}
                 <input type="hidden" name="cid" value="{{ $chapter->id }}">
                 <textarea id="user_question" class="form-control" rows="5" name="user_question"></textarea>
@@ -24,4 +26,5 @@
             </form>
             <p id="ajaxResponse" class="collapse ch_answer"></p>
     </div>
+    <p class="collapse_hack_1">&nbsp;</p>
 </div>

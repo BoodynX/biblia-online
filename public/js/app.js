@@ -770,8 +770,8 @@ $(document).ready(function () {
         elem = elem[0].dataset.target;
         setTimeout(function () {
             $('html, body').animate({
-                scrollTop: $(elem).offset().top
-            }, 1000);
+                scrollTop: $(elem).offset().top - 100
+            }, 1000, 'linear');
         }, 1);
     });
 

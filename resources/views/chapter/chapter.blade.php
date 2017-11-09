@@ -24,12 +24,14 @@
                     @endforeach
                 </div>
                 {{-- NAV AND FAQ --}}
-                @include('chapter.faq')
+                <div id="the_expandables">
+                    @include('chapter.faq')
+                    @include('chapter.media')
+                </div>
                 @include('chapter.nav')
             </div>
         </div>
         {{-- MODALS --}}
-        @include('chapter.media-modal')
         @include('chapter.verse-modal')
     </div>
 @endsection
