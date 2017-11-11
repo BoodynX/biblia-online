@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\models\Multimedia;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Chapter;
@@ -33,7 +34,10 @@ class ChaptersController extends Controller
         $next_step = ReaderProgress::nextStep($chapter->id);
         /* Get next step in next book */
         $next_book = ReaderProgress::nextStep(false, $chapter->book_id);
-        return view('chapter.chapter', compact('chapter', 'next_step', 'next_book'));
+        /* Get multimedia */
+        $multimedia = Multimedia::where('chapter_id', $chapter->id)->get();
+
+        return view('chapter.chapter', compact('chapter', 'next_step', 'next_book', 'multimedia'));
     }
 
     /**
