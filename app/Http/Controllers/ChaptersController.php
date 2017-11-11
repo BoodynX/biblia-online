@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\models\Multimedia;
+use App\Models\Multimedia;
 use Auth;
 use Illuminate\Http\Request;
 use App\Models\Chapter;
